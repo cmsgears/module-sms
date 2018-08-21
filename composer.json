@@ -1,0 +1,19 @@
+{
+	"name": "cmsgears/module-sms",
+	"description": "The SMS Module for CMSGears. It can be used to send SMS using well known SMS providers.",
+	"homepage": "http://www.cmsgears.org",
+	"type": "package",
+	"keywords": [ "yii2", "cmsgears", "module", "sms" ],
+	"license": "GPL-3.0-or-later",
+	"support": {
+		"resources": "https://www.cmsgears.org"
+	},
+	"autoload": {
+		"psr-4": {
+			"cmsgears\\sms\\": ""
+		}
+	},
+    "require": {
+        "cmsgears/module-core": "*"
+    }
+}
