@@ -11,14 +11,14 @@ namespace cmsgears\sms\common\components;
 // CMG Imports
 use cmsgears\sms\common\config\SmsProperties;
 
-use cmsgears\core\common\base\Component;
+use cmsgears\core\common\components\SmsManager;
 
 /**
  * The MSG91 Manager component provides methods to trigger message and OTP.
  *
  * @since 1.0.0
  */
-class Msg91Manager extends Component {
+class Msg91Manager extends SmsManager {
 
 	// Variables ---------------------------------------------------
 
@@ -73,11 +73,11 @@ class Msg91Manager extends Component {
 
 		if( $err ) {
 
-			echo "cURL Error #:" . $err;
+			//echo "cURL Error #:" . $err;
 		}
 		else {
 
-			echo $response;
+			//echo $response;
 		}
 	}
 
