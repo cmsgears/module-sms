@@ -10,8 +10,6 @@
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Migration;
-
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\resources\Form;
@@ -24,7 +22,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class m170805_061001_sms extends Migration {
+class m170201_002532_estoresms extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -66,7 +64,7 @@ class m170805_061001_sms extends Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config SMS', 'slug' => 'config-sms',
+			'name' => 'Config SMS', 'slug' => 'config-sms-estore',
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'SMS configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -77,13 +75,14 @@ class m170805_061001_sms extends Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		] );
 
-		$config = Form::findBySlugType( 'config-sms', CoreGlobal::TYPE_SYSTEM );
+		$config = Form::findBySlugType( 'config-sms-estore', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields = [
 			[ $config->id, 'active', 'Active', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Active"}' ],
-			[ $config->id, 'msg91_auth', 'MSG91 Auth', FormField::TYPE_TEXT, false, true, true, 'string', 0, NULL, '{"title":"MSG91 Auth","placeholder":"MSG91 Auth Key"}' ]
+			[ $config->id, 'username', 'Username', FormField::TYPE_TEXT, false, true, true, 'string', 0, NULL, '{"title":"Username","placeholder":"Estore Username"}' ],
+			[ $config->id, 'password', 'Password', FormField::TYPE_PASSWORD, false, true, true, 'string', 0, NULL, '{"title":"Password","placeholder":"Estore Password"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -94,8 +93,9 @@ class m170805_061001_sms extends Migration {
 		$columns = [ 'modelId', 'name', 'label', 'type', 'active', 'valueType', 'value', 'data' ];
 
 		$metas = [
-			[ $this->site->id, 'active', 'Active', 'sms', 1, 'flag', '1', NULL ],
-			[ $this->site->id, 'msg91_auth', 'MSG91 Auth', 'sms', 1, 'text', NULL, NULL ],
+			[ $this->site->id, 'active', 'Active', 'sms-estore', 1, 'flag', '1', NULL ],
+			[ $this->site->id, 'username', 'Username', 'sms-estore', 1, 'text', NULL, NULL ],
+			[ $this->site->id, 'password', 'Password', 'sms-estore', 1, 'text', NULL, NULL ],
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );
@@ -103,7 +103,7 @@ class m170805_061001_sms extends Migration {
 
 	public function down() {
 
-		echo "m170805_061001_sms will be deleted with m160621_014408_core.\n";
+		echo "m170201_002532_estoresms will be deleted with m160621_014408_core.\n";
 
 		return true;
 	}
