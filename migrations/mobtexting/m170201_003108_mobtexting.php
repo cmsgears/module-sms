@@ -22,7 +22,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class m170201_001281_msg91 extends \cmsgears\core\common\base\Migration {
+class m170201_003108_mobtexting extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -75,8 +75,9 @@ class m170201_001281_msg91 extends \cmsgears\core\common\base\Migration {
 
 		$fields = [
 			[ $config->id, 'active', 'Active', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Active"}' ],
-			[ $config->id, 'auth_key', 'Auth Key', FormField::TYPE_TEXT, false, true, true, 'string', 0, NULL, '{"title":"Auth Key", "placeholder":"Auth Key"}' ],
-			[ $config->id, 'sender', 'Sender', FormField::TYPE_TEXT, false, true, true, 'string', 0, NULL, '{"title":"Sender", "placeholder":"Sender"}' ]
+			[ $config->id, 'api_key', 'API Key', FormField::TYPE_TEXT, false, true, true, 'string', 0, NULL, '{"title":"API Key","placeholder":"API Key"}' ],
+			[ $config->id, 'method', 'Method', FormField::TYPE_TEXT, false, true, true, 'string', 0, NULL, '{"title":"Method","placeholder":"Method"}' ],
+			[ $config->id, 'sender', 'Sender', FormField::TYPE_TEXT, false, true, true, 'string', 0, NULL, '{"title":"Sender","placeholder":"Sender"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -88,8 +89,9 @@ class m170201_001281_msg91 extends \cmsgears\core\common\base\Migration {
 
 		$metas = [
 			[ $this->site->id, 'active', 'Active', 'sms', 1, 'flag', '1', NULL ],
-			[ $this->site->id, 'auth_key', 'Auth Key', 'sms', 1, 'text', NULL, NULL ],
-			[ $this->site->id, 'sender', 'Sender', 'sms', 1, 'text', NULL, NULL ]
+			[ $this->site->id, 'api_key', 'API Key', 'sms', 1, 'text', NULL, NULL ],
+			[ $this->site->id, 'method', 'Method', 'sms', 1, 'text', NULL, NULL ],
+			[ $this->site->id, 'sender', 'Sender', 'sms', 1, 'text', NULL, NULL ],
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );
@@ -97,7 +99,7 @@ class m170201_001281_msg91 extends \cmsgears\core\common\base\Migration {
 
 	public function down() {
 
-		echo "m170201_001281_msg91 will be deleted with m160621_014408_core.\n";
+		echo "m170201_003108_mobtexting will be deleted with m160621_014408_core.\n";
 
 		return true;
 	}

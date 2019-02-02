@@ -15,14 +15,12 @@ use Yii;
 // CMG Imports
 use cmsgears\sms\common\config\SmsGlobal;
 
-use cmsgears\core\common\base\Module as BaseModule;
-
 /**
- * The Admin Module of SMS Module.
+ * The admin module component of sms module.
  *
  * @since 1.0.0
  */
-class Module extends BaseModule {
+class Module extends \cmsgears\core\common\base\Module {
 
 	// Variables ---------------------------------------------------
 
@@ -63,9 +61,7 @@ class Module extends BaseModule {
 
 	public function getSidebarHtml() {
 
-		$path	= Yii::getAlias( '@cmsgears' ) . '/module-sms/admin/views/sidebar.php';
-
-		return $path;
+		return Yii::getAlias( '@cmsgears' ) . '/module-sms/admin/views/sidebar.php';
 	}
 
 }

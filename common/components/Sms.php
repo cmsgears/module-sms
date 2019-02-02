@@ -1,22 +1,20 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
-namespace cmsgears\sms\common\components;
 
-// CMG Imports
-use cmsgears\core\common\base\Component;
+namespace cmsgears\sms\common\components;
 
 /**
  * The Sms Component initialises the SMS Module.
  *
  * @since 1.0.0
  */
-class Sms extends Component {
+class Sms extends \cmsgears\core\common\base\Component {
 
 	// Variables ---------------------------------------------------
 

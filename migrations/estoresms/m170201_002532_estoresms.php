@@ -33,9 +33,6 @@ class m170201_002532_estoresms extends \cmsgears\core\common\base\Migration {
 	private $site;
 	private $master;
 
-	private $uploadsDir;
-	private $uploadsUrl;
-
 	public function init() {
 
 		// Table prefix
@@ -43,9 +40,6 @@ class m170201_002532_estoresms extends \cmsgears\core\common\base\Migration {
 
 		$this->site		= Site::findBySlug( CoreGlobal::SITE_MAIN );
 		$this->master	= User::findByUsername( Yii::$app->migration->getSiteMaster() );
-
-		$this->uploadsDir	= Yii::$app->migration->getUploadsDir();
-		$this->uploadsUrl	= Yii::$app->migration->getUploadsUrl();
 
 		Yii::$app->core->setSite( $this->site );
 	}
@@ -64,7 +58,7 @@ class m170201_002532_estoresms extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config SMS', 'slug' => 'config-sms-estore',
+			'name' => 'Config SMS', 'slug' => 'config-sms',
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'SMS configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -75,14 +69,15 @@ class m170201_002532_estoresms extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		] );
 
-		$config = Form::findBySlugType( 'config-sms-estore', CoreGlobal::TYPE_SYSTEM );
+		$config = Form::findBySlugType( 'config-sms', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields = [
 			[ $config->id, 'active', 'Active', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Active"}' ],
 			[ $config->id, 'username', 'Username', FormField::TYPE_TEXT, false, true, true, 'string', 0, NULL, '{"title":"Username","placeholder":"Estore Username"}' ],
-			[ $config->id, 'password', 'Password', FormField::TYPE_PASSWORD, false, true, true, 'string', 0, NULL, '{"title":"Password","placeholder":"Estore Password"}' ]
+			[ $config->id, 'password', 'Password', FormField::TYPE_PASSWORD, false, true, true, 'string', 0, NULL, '{"title":"Password","placeholder":"Estore Password"}' ],
+			[ $config->id, 'sender', 'Sender', FormField::TYPE_TEXT, false, true, true, 'string', 0, NULL, '{"title":"Sender", "placeholder":"Sender"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -93,9 +88,10 @@ class m170201_002532_estoresms extends \cmsgears\core\common\base\Migration {
 		$columns = [ 'modelId', 'name', 'label', 'type', 'active', 'valueType', 'value', 'data' ];
 
 		$metas = [
-			[ $this->site->id, 'active', 'Active', 'sms-estore', 1, 'flag', '1', NULL ],
-			[ $this->site->id, 'username', 'Username', 'sms-estore', 1, 'text', NULL, NULL ],
-			[ $this->site->id, 'password', 'Password', 'sms-estore', 1, 'text', NULL, NULL ],
+			[ $this->site->id, 'active', 'Active', 'sms', 1, 'flag', '1', NULL ],
+			[ $this->site->id, 'username', 'Username', 'sms', 1, 'text', NULL, NULL ],
+			[ $this->site->id, 'password', 'Password', 'sms', 1, 'text', NULL, NULL ],
+			[ $this->site->id, 'sender', 'Sender', 'sms', 1, 'text', NULL, NULL ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

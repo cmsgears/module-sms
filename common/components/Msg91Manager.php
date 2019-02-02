@@ -1,24 +1,23 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\sms\common\components;
 
 // CMG Imports
 use cmsgears\sms\common\config\SmsProperties;
-
-use cmsgears\core\common\components\SmsManager;
 
 /**
  * The MSG91 Manager component provides methods to trigger message and OTP.
  *
  * @since 1.0.0
  */
-class Msg91Manager extends SmsManager {
+class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 
 	// Variables ---------------------------------------------------
 
