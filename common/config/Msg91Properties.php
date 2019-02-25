@@ -10,21 +10,21 @@
 namespace cmsgears\sms\common\config;
 
 /**
- * SmsProperties provide methods to access the properties specific to SMS.
+ * Msg91Properties provide methods to access the properties specific to SMS.
  *
  * @since 1.0.0
  */
-class SmsProperties extends \cmsgears\core\common\config\Properties {
+class Msg91Properties extends \cmsgears\core\common\config\Properties {
 
 	// Variables ---------------------------------------------------
 
 	// Global -----------------
 
-	const PROP_ACTIVE = 'active';
+	const PROP_ACTIVE	= 'active';
 
 	const PROP_AUTH_KEY = 'auth_key';
 
-	const PROP_SENDER = 'sender';
+	const PROP_SENDER	= 'sender';
 
 	// Public -----------------
 
@@ -43,7 +43,7 @@ class SmsProperties extends \cmsgears\core\common\config\Properties {
 
 		if( !isset( self::$instance ) ) {
 
-			self::$instance	= new SmsProperties();
+			self::$instance	= new Msg91Properties();
 
 			self::$instance->init( SmsGlobal::CONFIG_SMS );
 		}
@@ -61,7 +61,7 @@ class SmsProperties extends \cmsgears\core\common\config\Properties {
 
 	// CMG parent classes --------------------
 
-	// SmsProperties -------------------------
+	// Msg91Properties -----------------------
 
 	public function isActive() {
 

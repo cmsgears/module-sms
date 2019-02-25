@@ -10,7 +10,7 @@
 namespace cmsgears\sms\common\components;
 
 // CMG Imports
-use cmsgears\sms\common\config\SmsProperties;
+use cmsgears\sms\common\config\Msg91Properties;
 
 /**
  * The MSG91 Manager component provides methods to trigger message and OTP.
@@ -43,17 +43,21 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 
 	// Msg91Manager --------------------------
 
-	public function sendOtp( $number, $message, $otp ) {
+	public function isActive() {
 
-		$authKey	= SmsProperties::getInstance()->getMsg91Auth();
-		$length		= 6;
-		$expiry		= 10; // Expires in 10 minutes
-		$message	= urlencode( $message );
+		return Msg91Properties::getInstance()->isActive();
+	}
+
+	public function getOtpBalance() {
+
+		$balance = 0;
+
+		$authKey = Msg91Properties::getInstance()->getAuthKey();
 
 		$curl = curl_init();
 
 		curl_setopt_array( $curl, [
-			CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?authkey=$authKey&message=$message&sender=VCMSGC&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry",
+			CURLOPT_URL => "https://control.msg91.com/api/balance.php?authkey=$authKey&response=json&type=106",
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
@@ -65,19 +69,66 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 			CURLOPT_SSL_VERIFYPEER => 0,
 		]);
 
-		$response	= curl_exec( $curl );
-		$err		= curl_error( $curl );
+		$response = curl_exec( $curl );
+
+		$err = curl_error( $curl );
 
 		curl_close( $curl );
 
 		if( $err ) {
 
-			//echo "cURL Error #:" . $err;
+			return 0;
 		}
 		else {
 
-			//echo $response;
+			$balance = intval( $response );
 		}
+
+		return $balance;
+	}
+
+	public function sendOtp( $number, $message, $otp ) {
+
+		$authKey	= Msg91Properties::getInstance()->getAuthKey();
+		$sender		= Msg91Properties::getInstance()->getSender();
+		$length		= 6;
+		$expiry		= 10; // Expires in 10 minutes
+		$message	= urlencode( $message );
+
+		// Filter Number - Remove +, - and spaces
+		$number = preg_replace('/[\+\-\s+]/', '', $number );
+
+		$curl = curl_init();
+
+		curl_setopt_array( $curl, [
+			CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?authkey=$authKey&response=json&message=$message&sender=MSG$sender&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "POST",
+			CURLOPT_POSTFIELDS => "",
+			CURLOPT_SSL_VERIFYHOST => 0,
+			CURLOPT_SSL_VERIFYPEER => 0,
+		]);
+
+		$response = json_decode( curl_exec( $curl ) );
+
+		$err = curl_error( $curl );
+
+		curl_close( $curl );
+
+		if( $err ) {
+
+			// Print error
+		}
+		else if( $response->type == 'success' ) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public function reSendOtp( $number, $message, $otp ) {
