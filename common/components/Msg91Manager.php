@@ -87,12 +87,12 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		return $balance;
 	}
 
-	public function sendOtp( $number, $message, $otp ) {
+	// Expires in 10 minutes
+	public function sendOtp( $number, $message, $otp, $expiry = 10 ) {
 
 		$authKey	= Msg91Properties::getInstance()->getAuthKey();
 		$sender		= Msg91Properties::getInstance()->getSender();
 		$length		= 6;
-		$expiry		= 10; // Expires in 10 minutes
 		$message	= urlencode( $message );
 
 		// Filter Number - Remove +, - and spaces
@@ -101,7 +101,7 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		$curl = curl_init();
 
 		curl_setopt_array( $curl, [
-			CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?authkey=$authKey&response=json&message=$message&sender=MSG$sender&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry",
+			CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?authkey=$authKey&response=json&message=$message&sender=$sender&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry",
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
