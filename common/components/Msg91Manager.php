@@ -148,7 +148,7 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		$curl = curl_init();
 
 		curl_setopt_array( $curl, [
-			CURLOPT_URL => "https://control.msg91.com/api/balance.php?authkey=$authKey&response=json&type=1",
+			CURLOPT_URL => "https://control.msg91.com/api/balance.php?authkey=$authKey&response=json&type=4",
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
@@ -200,7 +200,7 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 			CURLOPT_TIMEOUT => 30,
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_POSTFIELDS => "{ \"sender\": \"$sender\", \"route\": \"1\", \"country\": \"91\", \"sms\": [ { \"message\": \"$message\", \"to\": [ \"$number\" ] } ] }",
+			CURLOPT_POSTFIELDS => "{ \"sender\": \"$sender\", \"route\": \"4\", \"country\": \"91\", \"sms\": [ { \"message\": \"$message\", \"to\": [ \"$number\" ] } ] }",
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => 0,
 			CURLOPT_HTTPHEADER => array(
@@ -210,7 +210,7 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		));
 
 		$response = json_decode( curl_exec( $curl ) );
-
+var_dump( $response );
 		$err = curl_error( $curl );
 
 		curl_close( $curl );
