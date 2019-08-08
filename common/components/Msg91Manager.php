@@ -210,7 +210,7 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		));
 
 		$response = json_decode( curl_exec( $curl ) );
-var_dump( $response );
+
 		$err = curl_error( $curl );
 
 		curl_close( $curl );
