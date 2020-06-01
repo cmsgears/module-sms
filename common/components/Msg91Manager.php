@@ -103,7 +103,7 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		$curl = curl_init();
 
 		curl_setopt_array( $curl, [
-			CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?authkey=$authKey&response=json&message=$message&sender=$sender&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry",
+			CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?authkey=$authKey&response=json&message=$message&sender=$sender&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry&country=0",
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
@@ -188,19 +188,21 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		$number = preg_replace('/[\+\-\s+]/', '', $number );
 
 		// Remove 91
-		$number = substr( $number, 2 );
+		//$number = substr( $number, 2 );
 
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-			CURLOPT_URL => "https://api.msg91.com/api/v2/sendsms?country=91",
+			//CURLOPT_URL => "https://api.msg91.com/api/v2/sendsms?country=91",
+          	CURLOPT_URL => "https://api.msg91.com/api/v2/sendsms?country=0",
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
 			CURLOPT_TIMEOUT => 30,
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_POSTFIELDS => "{ \"sender\": \"$sender\", \"route\": \"4\", \"country\": \"91\", \"sms\": [ { \"message\": \"$message\", \"to\": [ \"$number\" ] } ] }",
+			//CURLOPT_POSTFIELDS => "{ \"sender\": \"$sender\", \"route\": \"4\", \"country\": \"91\", \"sms\": [ { \"message\": \"$message\", \"to\": [ \"$number\" ] } ] }",
+			CURLOPT_POSTFIELDS => "{ \"sender\": \"$sender\", \"route\": \"4\", \"country\": \"0\", \"sms\": [ { \"message\": \"$message\", \"to\": [ \"$number\" ] } ] }",
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => 0,
 			CURLOPT_HTTPHEADER => array(
