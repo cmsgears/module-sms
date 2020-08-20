@@ -22,7 +22,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class m170201_001281_msg91 extends \cmsgears\core\common\base\Migration {
+class m161101_001281_msg91 extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -97,7 +97,7 @@ class m170201_001281_msg91 extends \cmsgears\core\common\base\Migration {
 
 	public function down() {
 
-		echo "m170201_001281_msg91 will be deleted with m160621_014408_core.\n";
+		echo "m161101_001281_msg91 will be deleted with m160621_014408_core.\n";
 
 		return true;
 	}
