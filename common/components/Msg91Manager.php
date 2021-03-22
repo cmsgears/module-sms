@@ -48,6 +48,8 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		return Msg91Properties::getInstance()->isActive();
 	}
 
+	// OTP --------------
+
 	public function getOtpBalance() {
 
 		$balance = 0;
@@ -87,12 +89,12 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		return $balance;
 	}
 
-	public function sendOtp( $number, $message, $otp ) {
+	// Expires in 10 minutes
+	public function sendOtp( $number, $message, $otp, $expiry = 10 ) {
 
 		$authKey	= Msg91Properties::getInstance()->getAuthKey();
-		$sender		= Msg91Properties::getInstance()->getSender();
+		$sender		= Msg91Properties::getInstance()->getSender(); // Must be 6 digits
 		$length		= 6;
-		$expiry		= 10; // Expires in 10 minutes
 		$message	= urlencode( $message );
 
 		// Filter Number - Remove +, - and spaces
@@ -101,7 +103,7 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		$curl = curl_init();
 
 		curl_setopt_array( $curl, [
-			CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?authkey=$authKey&response=json&message=$message&sender=MSG$sender&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry",
+			CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?authkey=$authKey&response=json&message=$message&sender=$sender&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry&country=0",
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
@@ -133,6 +135,98 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 
 	public function reSendOtp( $number, $message, $otp ) {
 
+	}
+
+	// SMS --------------
+
+	public function getSmsBalance() {
+
+		$balance = 0;
+
+		$authKey = Msg91Properties::getInstance()->getAuthKey();
+
+		$curl = curl_init();
+
+		curl_setopt_array( $curl, [
+			CURLOPT_URL => "https://control.msg91.com/api/balance.php?authkey=$authKey&response=json&type=4",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "POST",
+			CURLOPT_POSTFIELDS => "",
+			CURLOPT_SSL_VERIFYHOST => 0,
+			CURLOPT_SSL_VERIFYPEER => 0,
+		]);
+
+		$response = curl_exec( $curl );
+
+		$err = curl_error( $curl );
+
+		curl_close( $curl );
+
+		if( $err ) {
+
+			return 0;
+		}
+		else {
+
+			$balance = intval( $response );
+		}
+
+		return $balance;
+	}
+
+	public function sendSms( $number, $message ) {
+
+		$authKey	= Msg91Properties::getInstance()->getAuthKey();
+		$sender		= Msg91Properties::getInstance()->getSender(); // Must be 6 digits
+		$message	= $message;
+
+		// Filter Number - Remove +, - and spaces
+		$number = preg_replace('/[\+\-\s+]/', '', $number );
+
+		// Remove 91
+		//$number = substr( $number, 2 );
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+			//CURLOPT_URL => "https://api.msg91.com/api/v2/sendsms?country=91",
+          	CURLOPT_URL => "https://api.msg91.com/api/v2/sendsms?country=0",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "POST",
+			//CURLOPT_POSTFIELDS => "{ \"sender\": \"$sender\", \"route\": \"4\", \"country\": \"91\", \"sms\": [ { \"message\": \"$message\", \"to\": [ \"$number\" ] } ] }",
+			CURLOPT_POSTFIELDS => "{ \"sender\": \"$sender\", \"route\": \"4\", \"country\": \"0\", \"sms\": [ { \"message\": \"$message\", \"to\": [ \"$number\" ] } ] }",
+			CURLOPT_SSL_VERIFYHOST => 0,
+			CURLOPT_SSL_VERIFYPEER => 0,
+			CURLOPT_HTTPHEADER => array(
+				"authkey: $authKey",
+				"content-type: application/json"
+			),
+		));
+
+		$response = json_decode( curl_exec( $curl ) );
+
+		$err = curl_error( $curl );
+
+		curl_close( $curl );
+
+		if( $err ) {
+
+			// echo "cURL Error #:" . $err;
+		}
+		else if( $response->type == 'success' ) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
