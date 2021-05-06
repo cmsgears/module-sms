@@ -90,7 +90,7 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 	}
 
 	// Expires in 10 minutes
-	public function sendOtp( $number, $message, $otp, $expiry = 10 ) {
+	public function sendOtp( $number, $message, $otp, $templateId, $expiry = 10 ) {
 
 		$authKey	= Msg91Properties::getInstance()->getAuthKey();
 		$sender		= Msg91Properties::getInstance()->getSender(); // Must be 6 digits
@@ -103,8 +103,9 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 		$curl = curl_init();
 
 		curl_setopt_array( $curl, [
-			CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?authkey=$authKey&response=json&message=$message&sender=$sender&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry&country=0",
-			CURLOPT_RETURNTRANSFER => true,
+			//CURLOPT_URL => "https://api.msg91.com/api/v5/otp?authkey=$authKey&response=json&message=$message&sender=$sender&DLT_TE_ID=$templateId&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry&country=0",
+			CURLOPT_URL => "https://api.msg91.com/api/v5/otp?authkey=$authKey&mobile=$number&template_id=$templateId&otp=$otp&otp_length=$length&otp_expiry=$expiry",
+          	CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
 			CURLOPT_TIMEOUT => 30,
