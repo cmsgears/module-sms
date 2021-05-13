@@ -9,6 +9,9 @@
 
 namespace cmsgears\sms\common\components;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\sms\common\config\Msg91Properties;
 
@@ -90,7 +93,22 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 	}
 
 	// Expires in 10 minutes
-	public function sendOtp( $number, $message, $otp, $templateId, $expiry = 10 ) {
+	public function sendOtp( $number, $otp, $templateSlug, $expiry = 10 ) {
+
+		$smsTemplateService = Yii::$app->factory->get( 'smsTemplateService' );
+
+		$smsTemplate = $smsTemplateService->getBySlug( $templateSlug );
+
+		$message = '';
+
+		if( empty( $smsTemplate ) || empty( $smsTemplate->templateId ) ) {
+
+			return false;
+		}
+		else {
+
+			$message = str_replace( "{otp}", $otp, $smsTemplate->content );
+		}
 
 		$authKey	= Msg91Properties::getInstance()->getAuthKey();
 		$sender		= Msg91Properties::getInstance()->getSender(); // Must be 6 digits
@@ -104,7 +122,7 @@ class Msg91Manager extends \cmsgears\core\common\components\SmsManager {
 
 		curl_setopt_array( $curl, [
 			//CURLOPT_URL => "https://api.msg91.com/api/v5/otp?authkey=$authKey&response=json&message=$message&sender=$sender&DLT_TE_ID=$templateId&mobile=$number&otp=$otp&otp_length=$length&otp_expiry=$expiry&country=0",
-			CURLOPT_URL => "https://api.msg91.com/api/v5/otp?authkey=$authKey&mobile=$number&template_id=$templateId&otp=$otp&otp_length=$length&otp_expiry=$expiry",
+			CURLOPT_URL => "https://api.msg91.com/api/v5/otp?authkey=$authKey&mobile=$number&template_id={$smsTemplate->templateId}&otp=$otp&otp_length=$length&otp_expiry=$expiry",
           	CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
